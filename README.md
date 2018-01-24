@@ -47,3 +47,9 @@ Run the publisher with the following command, the second parameter is the messag
 ```
 $ ./target/mqtt-sample publisher "My first MQTT message..."
 ```
+
+/Testes:
+mosquitto_sub -t "iot_data_jr" -h iot.eclipse.org
+mosquitto_pub -t "iot_data_jr" -h  iot.eclipse.org -m "ewrwerwe"
+
+
