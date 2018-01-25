@@ -3,7 +3,6 @@ package com.mapr.demo.mqtt.simple;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 public class Publisher {
 
@@ -17,13 +16,10 @@ public class Publisher {
     }
 
     String broker = "tcp://iot.eclipse.org:1883";
-    String clientId     = "JavaSample";
-    //MemoryPersistence persistence = new MemoryPersistence();
 
     System.out.println("== START PUBLISHER == Server:: " + broker);
 
     MqttClient client = new MqttClient(broker, MqttClient.generateClientId());
-    //MqttClient client = new MqttClient(broker, clientId, persistence);
     
     client.connect();
     

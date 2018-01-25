@@ -7,16 +7,15 @@ public class Subscriber {
 
   public static void main(String[] args) throws MqttException {
 
-	String broker = "tcp://iot.eclipse.org:1883";
+	String broker = "tcp://" + args[1] + ":1883";
 	
     System.out.println("== START SUBSCRIBER == Server:: " + broker );
 
     MqttClient client=new MqttClient(broker, MqttClient.generateClientId());
-    client.setCallback( new SimpleMqttCallBack() );
+    client.setCallback( new SimpleMqttCallBack(args[2]) );
     client.connect();
-
-    client.subscribe("iot_data_jr");
-
+        
+    client.subscribe("#");
   }
 
 }
