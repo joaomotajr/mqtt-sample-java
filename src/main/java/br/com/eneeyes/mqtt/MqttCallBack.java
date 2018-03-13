@@ -7,11 +7,15 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class MqttCallBack implements MqttCallback {
+	
+	private Log log = LogFactory.getLog(getClass());
 
 	public String url;
 	
@@ -29,12 +33,13 @@ public class MqttCallBack implements MqttCallback {
 	}
 	
 	public void connectionLost(Throwable throwable) {
-		System.out.println("Connection to MQTT broker lost!");
+		
+		log.info("Connection to MQTT broker Perdida!");
 	}
 	
 	public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-	    
-		System.out.println("Mensagem Recebida:\t - Id: " + s + "| Value: " + new String(mqttMessage.getPayload()) );
+
+		log.info("Mensagem Recebida:\t - Id: " + s + "| Value: " + new String(mqttMessage.getPayload()));
 	    
 	    sendToRest(s, mqttMessage.toString());
 	}
@@ -46,30 +51,28 @@ public class MqttCallBack implements MqttCallback {
 		  
 		try {					
 				
-			URL url = new URL("http://" + getUrl() + ":8090/api/historic/SaveByPositionUid2/" + id + "/" + value);
+			URL url = new URL("http://" + getUrl() + "/api/historic/SaveByPositionUid2/" + id + "/" + value);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			
 			conn.setRequestMethod("GET");
 			conn.setRequestProperty("Accept", "application/json");
 	
 			if (conn.getResponseCode() != 200) {
-				throw new RuntimeException("Failed : HTTP error code : "
-						+ conn.getResponseCode());
+				throw new RuntimeException("Falha : HTTP error code : " + conn.getResponseCode());
 			}
 	
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-				(conn.getInputStream())));
+			BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 	
 			String output;
-			System.out.println("Retorno: ");
+			log.info("Retorno: ");
 			while ((output = br.readLine()) != null) {
 								
 				if(output.toString().equalsIgnoreCase("true")) 
-					System.out.println("Mensagem Enviada ao E-Gas com SUCESSO");
+					log.info("Mensagem Enviada ao E-Gas com SUCESSO");
 				else if (output.toString().equalsIgnoreCase("false")) 
-					System.out.println("Mensagem Enviada ao E-Gas - Dispositivo Não Localizado");			
+					log.info("Mensagem Enviada ao E-Gas - Dispositivo Não Localizado");			
 				else 
-					System.out.println(output);					
+					log.info(output);					
 				
 			}
 	
@@ -77,11 +80,11 @@ public class MqttCallBack implements MqttCallback {
 	
 		  } catch (MalformedURLException e) {
 	
-			  System.out.println("URL inválida ou parâmetros vazios ou nulos .... \n");
+			  log.warn("URL inválida ou parâmetros vazios ou nulos .... \n");
 	
 		  } catch (IOException e) {
 	
-			System.out.println("Mensagem Não enviada ao Servido E-Gas .... \n");
+			  log.warn("Mensagem Não enviada ao Servidor E-Gas. [" + e.getMessage() + "] /n" );
 	
 		 }
 	}

@@ -24,7 +24,7 @@ public class MqttApp {
         Subscriber.main(args);
         break;
       default:
-        throw new IllegalArgumentException("Don't know how to do " + args[0]);
+        throw new IllegalArgumentException("São sei o que fazer para o parâmetro " + args[0]);
     }
   }
 }
