@@ -46,7 +46,7 @@ public class SimpleMqttCallBack implements MqttCallback {
 		  
 		try {	  
 				
-			URL url = new URL("http://" + getUrl() + ":8090/api/historic/SaveByPositionUid2/" + id + "/" + value);
+			URL url = new URL("http://" + getUrl() + "/api/historic/SaveByPositionUid2/" + id + "/" + value);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			
 			conn.setRequestMethod("GET");
