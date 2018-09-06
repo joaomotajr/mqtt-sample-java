@@ -7,15 +7,14 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class MqttCallBack implements MqttCallback {
-	
-	private Log log = LogFactory.getLog(getClass());
+		
+	final static Logger logger = Logger.getLogger(MqttCallBack.class);
 
 	public String url;
 	
@@ -34,17 +33,20 @@ public class MqttCallBack implements MqttCallback {
 	
 	public void connectionLost(Throwable throwable) {
 		
-		log.info("Connection to MQTT broker Perdida!");
+		logger.info("Connection to MQTT broker Perdida!");
 	}
 	
 	public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
 
-		log.info("Mensagem Recebida:\t - Id: " + s + "| Value: " + new String(mqttMessage.getPayload()));
+		logger.info("Mensagem Recebida:\t - Id: " + s + "| Value: " + new String(mqttMessage.getPayload()));
 	    
 	    sendToRest(s, mqttMessage.toString());
 	}
 	
 	public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+		
+		logger.info("Message Delivered :\t - Id: " + iMqttDeliveryToken.getMessageId() + "|  " + iMqttDeliveryToken.getResponse());
+		
 	}
 	  
 	private void sendToRest(String id, String value) {
@@ -64,15 +66,15 @@ public class MqttCallBack implements MqttCallback {
 			BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 	
 			String output;
-			log.info("Retorno: ");
+			logger.info("Retorno: ");
 			while ((output = br.readLine()) != null) {
 								
 				if(output.toString().equalsIgnoreCase("true")) 
-					log.info("Mensagem Enviada ao E-Gas com SUCESSO");
+					logger.info("Mensagem Enviada ao E-Gas com SUCESSO");
 				else if (output.toString().equalsIgnoreCase("false")) 
-					log.info("Mensagem Enviada ao E-Gas - Dispositivo Não Localizado");			
+					logger.info("Mensagem Enviada ao E-Gas - Dispositivo Não Localizado");			
 				else 
-					log.info(output);					
+					logger.info(output);					
 				
 			}
 	
@@ -80,11 +82,11 @@ public class MqttCallBack implements MqttCallback {
 	
 		  } catch (MalformedURLException e) {
 	
-			  log.warn("URL inválida ou parâmetros vazios ou nulos .... \n");
+			  logger.warn("URL inválida ou parâmetros vazios ou nulos .... \n");
 	
 		  } catch (IOException e) {
 	
-			  log.warn("Mensagem Não enviada ao Servidor E-Gas. [" + e.getMessage() + "] /n" );
+			  logger.warn("Mensagem Não enviada ao Servidor E-Gas. [" + e.getMessage() + "] /n" );
 	
 		 }
 	}
