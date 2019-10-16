@@ -74,21 +74,17 @@ public class MqttCallBack implements MqttCallback {
 				else if (output.toString().equalsIgnoreCase("false")) 
 					logger.info("Mensagem Enviada ao E-Gas - Dispositivo Não Localizado");			
 				else 
-					logger.info(output);					
-				
+					logger.info(output);				
 			}
 	
 			conn.disconnect();
 	
-		  } catch (MalformedURLException e) {
-	
-			  logger.warn("URL inválida ou parâmetros vazios ou nulos .... \n");
-	
-		  } catch (IOException e) {
-	
-			  logger.warn("Mensagem Não enviada ao Servidor E-Gas. [" + e.getMessage() + "] /n" );
-	
+		  } catch (MalformedURLException e) {	
+			  logger.warn("URL inválida ou parâmetros vazios ou nulos .... \n");	
+		  } catch (IOException e) {	
+			  logger.warn("Mensagem Não enviada ao Servidor E-Gas. [" + e.getMessage() + "] /n" );	
+		  } catch (Exception e) {				
+			  logger.warn("Mensagem Não Conhecida. [" + e.getMessage() + "] /n" );	
 		 }
-	}
-  
+	}  
 }
